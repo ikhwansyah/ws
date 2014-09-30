@@ -31,5 +31,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
   echo "</data>";
   mysql_free_result($result);
 }
+// method untuk post
+else if($_SERVER['REQUEST_METHOD'] == 'POST'){
+  $querycek = "SELECT * FROM mahasiswa WHERE nim='%s'";
+  $querycek = sprintf($querycek, mysql_real_escape_string($_POST['nim']));
+  $querycek = mysql_query($querycek);
+  $num_rows = mysql_num_rows($querycek);
+  if ($num_rows == 0) {
+    $query = "INSERT INTO mahasiswa (nim, nama, alamat, prodi) VALUES ( '%s','%s','%s','%s' )";
+    $query = sprintf($query, $_POST['nim'], $_POST['nama'], $_POST['alamat'], $_POST['prodi'] );
+  }else if ($num_rows == 1){
+    $query = "UPDATE mahasiswa SET nim = '%s', nama = '%s', alamat = '%s' , prodi= '%s' WHERE nim = '%s'";
+    $query = sprintf($query, $_POST['nim'], $_POST['nama'], $_POST['alamat'], $_POST['prodi'], $_POST['nim'] );
+  }
+  $result = mysql_query($query) or die ('Query Failed : '. mysql_error());
+}
 mysql_close();
 ?>
