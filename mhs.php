@@ -2,26 +2,31 @@
 header('Content-Type: text/xml; charset=ISO-8859-1');
 include "koneksi.php";
 
-$path = $_SERVER[PATH_INFO];
+$path_params = array();
+$self = $_SERVER['PHP_SELF'];
+$extension = substr($self, strlen($self)-3);
+$path = ($extension=='php') ? NULL : $_SERVER['PATH_INFO'];
+
+
 if ($path != null) {
-	$path_params = spliti ("/", $path);
+	$path_params = explode("/", $path);
 }
 
 if ($_SERVER['REQUEST_METHOD']=='GET') {
-	if ($path_params[1] != null) {
+	if (isset($path_params[1]) && $path_params[1] != NULL ){
 		$query = "select
 			nim,
 			nama,
 			alamat,
 			prodi,
-			from mahasiswa where nim =$path_params[1]";
+			from table_mahasiswa where nim =$path_params[1]";
 	} else {
 		$query = "select
 		nim,
 		nama,
 		alamat,
 		prodi
-		from mahasiswa";
+		from table_mahasiswa";
 	}
 	$result = mysql_query($query) or die ('Query failed: '.mysql_error());
 	
